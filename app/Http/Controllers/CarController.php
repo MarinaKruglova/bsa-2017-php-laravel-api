@@ -34,21 +34,51 @@ class CarController extends Controller
         return response()->json($carsFiltered);
     }
 
-    public function store(int $id)
+    public function store(Request $request)
     {
+        $newCar = new Car($request->all());
+        return response()->json($this->carsRepository->store($newCar));
     }
 
     public function show(int $id)
     {
+        $car = $this->carsRepository->getById($id);
+
+        if (is_object($car)) {
+            $response = response()->json($car);
+        } else {
+            $response = response()->json(['error' => "No car with id $id"], 404);
+        }
+
+        return $response;
     }
 
-    public function update()
+    public function update(Request $request, int $id)
     {
+        $car = $this->carsRepository->getById($id);
+        if ($car) {
+            $car->fromArray($request->all());
+        }
+        
+        if (is_object($car)) {
+            $response = response()->json($car);
+        } else {
+            $response = response()->json(['error' => "No car with id $id"], 404);
+        }
+
+        return $response;
     }
 
-    public function destroy()
+    public function destroy(int $id)
     {
+        $car = $this->carsRepository->getById($id);
+        $collection = $this->carsRepository->delete($id);
+        if (is_object($car)) {
+            $response = $collection;
+        } else {
+            $response = response()->json(['error' => "No car with id $id"], 404);
+        }
+
+        return $response;
     }
-
-
 }

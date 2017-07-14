@@ -18,8 +18,5 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 });
 
 Route::get('cars', 'CarController@index');
-// Route::get('cars', function () { return "hell";});
 Route::get('cars/{id}', 'CarController@show');
-Route::resource('admin/cars', 'CarController', ['except' => [
-    'create', 'edit'
-]]);
+Route::resource('admin/cars', 'CarController', ['except' => [ 'create', 'edit' ]]);
